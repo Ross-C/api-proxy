@@ -27,8 +27,8 @@ class EndPointController extends Controller
             ], 404);
         }
 
-        //save request headers to variable
-        $headers = $request->headers->all();
+        //get auth header
+        $authHeader = $request->header('Authorization');
 
         //get the url to send the request to
         $url = $app->url;
@@ -41,7 +41,9 @@ class EndPointController extends Controller
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', $url, [
             'form_params' => $request->all(),
-            'headers' => $headers
+            'headers' => [
+                'Authorization' => $authHeader
+            ]
         ]);
 
         //return the response
