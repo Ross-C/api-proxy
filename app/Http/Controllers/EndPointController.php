@@ -10,6 +10,7 @@ class EndPointController extends Controller
 {
     public function postRequest(App $app, Request $request)
     {
+
         //if app is not found
         if (!$app) {
             return response()->json([
@@ -26,6 +27,9 @@ class EndPointController extends Controller
             ], 404);
         }
 
+        //save request headers to variable
+        $headers = $request->headers->all();
+
         //get the url to send the request to
         $url = $app->url;
         if ($endPoint->app_url_prefix) {
@@ -36,7 +40,8 @@ class EndPointController extends Controller
         //make POST request to endpoint
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', $url, [
-            'form_params' => $request->all()
+            'form_params' => $request->all(),
+            'headers' => $headers
         ]);
 
         //return the response
